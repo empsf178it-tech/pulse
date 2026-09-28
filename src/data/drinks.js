@@ -1,3 +1,5 @@
+import { getAssetUrl } from '../utils/assets';
+
 export const DRINKS = [
   {
     id: 'citrus-pulse',
@@ -7,7 +9,7 @@ export const DRINKS = [
     accentColor: '#EAF900',
     accentDark: '#B8C400',
     accentBg: 'rgba(234, 249, 0, 0.08)',
-    heroImage: '/images/pulse_citrus_hero.jpg',
+    heroImage: getAssetUrl('/images/pulse_citrus_hero.jpg'),
     flavorNotes: ['Sicilian Lemon', 'Blood Orange', 'Crushed Citrus Peel'],
     tastingProfile: {
       sweetness: 2,
@@ -29,7 +31,7 @@ export const DRINKS = [
     accentColor: '#FF2E75',
     accentDark: '#C70048',
     accentBg: 'rgba(255, 46, 117, 0.08)',
-    heroImage: '/images/pulse_berry_hero.jpg',
+    heroImage: getAssetUrl('/images/pulse_berry_hero.jpg'),
     flavorNotes: ['Wild Strawberry', 'Raspberry Tartness', 'Blueberry Zest'],
     tastingProfile: {
       sweetness: 3,
@@ -51,7 +53,7 @@ export const DRINKS = [
     accentColor: '#FF7E27',
     accentDark: '#D45B06',
     accentBg: 'rgba(255, 126, 39, 0.08)',
-    heroImage: '/images/pulse_tropic_hero.jpg',
+    heroImage: getAssetUrl('/images/pulse_tropic_hero.jpg'),
     flavorNotes: ['Golden Pineapple', 'Purple Passionfruit', 'Tahitian Lime'],
     tastingProfile: {
       sweetness: 4,

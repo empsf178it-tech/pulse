@@ -4,6 +4,7 @@ import { ArrowRight, ArrowDown, Sparkles, Droplets, Zap, ChevronRight } from 'lu
 import { BubbleCanvas } from '../components/BubbleCanvas';
 import { DRINKS, FLAVOUR_MOODS } from '../data/drinks';
 import { soundManager } from '../utils/sound';
+import { getAssetUrl } from '../utils/assets';
 
 export const HomePage = ({ onNavigate }) => {
   const [activeFlavourId, setActiveFlavourId] = useState('citrus');
@@ -121,7 +122,7 @@ export const HomePage = ({ onNavigate }) => {
             >
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gradient-to-b from-[#1A1C24] to-[#0D0E12]">
                 <img
-                  src="/images/pulse_citrus_hero.jpg"
+                  src={getAssetUrl('/images/pulse_citrus_hero.jpg')}
                   alt="PULSE Citrus Beverage Studio Photography"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
