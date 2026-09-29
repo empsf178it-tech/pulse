@@ -20,51 +20,68 @@ export const CustomCursor = () => {
       return;
     }
 
-    const onMouseMove = (e) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
+    let lastX = window.innerWidth / 2;
+    let lastY = window.innerHeight / 2;
 
-      if (!isVisible) setIsVisible(true);
-
-      // Check hovered element
-      const target = e.target.closest('[data-cursor]');
-      if (target) {
-        const type = target.getAttribute('data-cursor');
-        if (type === 'taste') {
-          setCursorState('taste');
-          setCursorText('TASTE');
-        } else if (type === 'explore') {
-          setCursorState('explore');
-          setCursorText('EXPLORE');
-        } else if (type === 'hover') {
-          setCursorState('hover');
-          setCursorText('');
-        }
-      } else {
-        const isInteractive = e.target.closest('a, button, input, textarea, select, [role="button"]');
-        if (isInteractive) {
-          setCursorState('hover');
-          setCursorText('');
+    const updateCursorTarget = (x, y) => {
+      const el = document.elementFromPoint(x, y);
+      if (el) {
+        const target = el.closest('[data-cursor]');
+        if (target) {
+          const type = target.getAttribute('data-cursor');
+          if (type === 'taste') {
+            setCursorState('taste');
+            setCursorText('TASTE');
+          } else if (type === 'explore') {
+            setCursorState('explore');
+            setCursorText('EXPLORE');
+          } else if (type === 'hover') {
+            setCursorState('hover');
+            setCursorText('');
+          }
         } else {
-          setCursorState('default');
-          setCursorText('');
+          const isInteractive = el.closest('a, button, input, textarea, select, [role="button"]');
+          if (isInteractive) {
+            setCursorState('hover');
+            setCursorText('');
+          } else {
+            setCursorState('default');
+            setCursorText('');
+          }
         }
       }
+    };
+
+    const onMouseMove = (e) => {
+      lastX = e.clientX;
+      lastY = e.clientY;
+      cursorX.set(lastX);
+      cursorY.set(lastY);
+
+      setIsVisible(true);
+      updateCursorTarget(lastX, lastY);
+    };
+
+    const onScroll = () => {
+      setIsVisible(true);
+      updateCursorTarget(lastX, lastY);
     };
 
     const onMouseLeave = () => setIsVisible(false);
     const onMouseEnter = () => setIsVisible(true);
 
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('mouseleave', onMouseLeave);
     window.addEventListener('mouseenter', onMouseEnter);
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('mouseleave', onMouseLeave);
       window.removeEventListener('mouseenter', onMouseEnter);
     };
-  }, [isVisible, cursorX, cursorY]);
+  }, [cursorX, cursorY]);
 
   const isExpanded = cursorState === 'taste' || cursorState === 'explore';
   const size = isExpanded ? 80 : cursorState === 'hover' ? 48 : 32;

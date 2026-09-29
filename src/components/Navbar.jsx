@@ -81,8 +81,8 @@ export const Navbar = ({ activePage, onNavigate, scrollProgress }) => {
             <Logo size="md" />
           </button>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-8">
+          {/* Desktop Navigation Links (Visible on 1280px+ xl screens) */}
+          <nav className="hidden xl:flex items-center gap-6 xl:gap-8">
             {navLinks.slice(0, 6).map((link) => {
               const isActive = activePage === link.route;
               return (
@@ -107,7 +107,7 @@ export const Navbar = ({ activePage, onNavigate, scrollProgress }) => {
           </nav>
 
           {/* Right Action Group */}
-          <div className="hidden lg:flex items-center gap-5">
+          <div className="hidden xl:flex items-center gap-5">
             {/* Audio Toggle */}
             <button
               onClick={toggleSound}
@@ -143,8 +143,8 @@ export const Navbar = ({ activePage, onNavigate, scrollProgress }) => {
             </button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex lg:hidden items-center gap-2.5">
+          {/* Mobile / Tablet Menu Button (Visible on screens under 1280px, including 1024px) */}
+          <div className="flex xl:hidden items-center gap-2.5">
             <button
               onClick={toggleSound}
               className="w-9 h-9 rounded-full bg-white/10 text-white hover:bg-white/20 flex items-center justify-center transition-colors focus:outline-none"
@@ -164,7 +164,7 @@ export const Navbar = ({ activePage, onNavigate, scrollProgress }) => {
         </div>
       </header>
 
-      {/* Full-Screen Animated Mobile Navigation Drawer */}
+      {/* Full-Screen Animated Navigation Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -172,7 +172,7 @@ export const Navbar = ({ activePage, onNavigate, scrollProgress }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: '-100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed inset-0 z-[1001] bg-[#0B0C10] flex flex-col justify-between p-6 sm:p-10 lg:hidden overflow-y-auto"
+            className="fixed inset-0 z-[1001] bg-[#0B0C10] flex flex-col justify-between p-6 sm:p-10 xl:hidden overflow-y-auto"
           >
             {/* Mobile Drawer Header */}
             <div className="flex items-center justify-between w-full pt-2 pb-4">

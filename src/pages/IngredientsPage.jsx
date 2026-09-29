@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, MapPin, Droplets, Leaf, ArrowUpRight, ShieldCheck, Activity, Award } from 'lucide-react';
 import { INGREDIENT_GROUPS } from '../data/drinks';
@@ -6,6 +6,34 @@ import { soundManager } from '../utils/sound';
 
 export const IngredientsPage = ({ onNavigate }) => {
   const [activeItem, setActiveItem] = useState(INGREDIENT_GROUPS[0].items[0]);
+  const [userSelected, setUserSelected] = useState(false);
+
+  // Auto-sync active item when scrolling into different ingredient categories
+  useEffect(() => {
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !userSelected) {
+          const groupIdxStr = entry.target.id.replace('ingredient-group-', '');
+          const groupIdx = parseInt(groupIdxStr, 10);
+          if (!isNaN(groupIdx) && INGREDIENT_GROUPS[groupIdx]) {
+            setActiveItem(INGREDIENT_GROUPS[groupIdx].items[0]);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, {
+      rootMargin: '-20% 0px -40% 0px',
+      threshold: 0.1
+    });
+
+    INGREDIENT_GROUPS.forEach((_, idx) => {
+      const el = document.getElementById(`ingredient-group-${idx}`);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [userSelected]);
 
   // Flavor profile mock specs based on active selection
   const getProfileSpecs = (item) => {
@@ -27,6 +55,8 @@ export const IngredientsPage = ({ onNavigate }) => {
     const el = document.getElementById(`ingredient-group-${groupIdx}`);
     if (el) {
       soundManager.playFizzPop();
+      setUserSelected(false);
+      setActiveItem(INGREDIENT_GROUPS[groupIdx].items[0]);
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
@@ -100,7 +130,7 @@ export const IngredientsPage = ({ onNavigate }) => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start mb-40 md:mb-56">
           
           {/* Left Column: Ingredient Groups (7 Cols) */}
-          <div className="lg:col-span-7 space-y-20 md:space-y-28">
+          <div className="lg:col-span-7 space-y-20 md:space-y-28 pb-36 lg:pb-64">
             {INGREDIENT_GROUPS.map((group, groupIdx) => (
               <div
                 key={groupIdx}
@@ -138,6 +168,7 @@ export const IngredientsPage = ({ onNavigate }) => {
                         key={itemIdx}
                         onClick={() => {
                           soundManager.playFizzPop();
+                          setUserSelected(true);
                           setActiveItem(item);
                         }}
                         className={`text-left p-6 rounded-3xl border transition-all duration-300 flex flex-col justify-between group relative overflow-hidden ${
@@ -156,6 +187,10 @@ export const IngredientsPage = ({ onNavigate }) => {
                           <img
                             src={item.image}
                             alt={item.name}
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = 'https://images.unsplash.com/photo-1534723452862-4c874018d66d?q=80&w=1200&auto=format&fit=crop';
+                            }}
                             className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -181,11 +216,11 @@ export const IngredientsPage = ({ onNavigate }) => {
             ))}
           </div>
 
-          {/* Right Column: STICKY DYNAMIC DASHBOARD (5 Cols, pinned at top-32 on lg) */}
-          <div className="lg:col-span-5 lg:sticky lg:top-32 self-start space-y-6">
+          {/* Right Column: STICKY DYNAMIC DASHBOARD (5 Cols, pinned at top-24 on md & lg) */}
+          <div className="lg:col-span-5 md:sticky md:top-24 z-20 self-start space-y-5">
             
             {/* Category Quick Jump Pills */}
-            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between gap-1">
+            <div className="p-2.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between gap-1 backdrop-blur-md">
               {INGREDIENT_GROUPS.map((g, idx) => (
                 <button
                   key={idx}
@@ -205,16 +240,20 @@ export const IngredientsPage = ({ onNavigate }) => {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.35 }}
-              className="rounded-[2.5rem] glass-panel border border-white/20 p-8 md:p-10 shadow-2xl space-y-6 relative overflow-hidden"
+              className="rounded-[2rem] glass-panel border border-white/20 p-6 md:p-8 shadow-2xl space-y-5 relative overflow-hidden"
             >
               {/* Background Glow */}
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-pulse-citrus/10 rounded-full blur-[90px] pointer-events-none" />
 
-              {/* Large Image Viewport */}
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/15 shadow-lg">
+              {/* Compact Image Viewport */}
+              <div className="relative aspect-[16/10] rounded-2xl overflow-hidden border border-white/15 shadow-lg">
                 <img
                   src={activeItem.image}
                   alt={activeItem.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://images.unsplash.com/photo-1534723452862-4c874018d66d?q=80&w=1200&auto=format&fit=crop';
+                  }}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
@@ -406,41 +445,50 @@ export const IngredientsPage = ({ onNavigate }) => {
             </h2>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-8 md:gap-10">
-            <div className="w-full sm:w-[calc(50%-20px)] lg:w-0 lg:flex-1 p-8 sm:p-10 md:p-12 rounded-[2.5rem] glass-panel border border-white/15 relative overflow-hidden group hover:border-pulse-citrus/40 transition-colors flex flex-col justify-between">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {/* Card 01 */}
+            <div className="p-8 sm:p-10 rounded-[2.5rem] glass-panel border border-white/15 relative overflow-hidden group hover:border-pulse-citrus/40 transition-colors flex flex-col justify-between">
               <div>
-                <span className="font-display text-6xl sm:text-8xl font-black text-white/5 absolute top-6 right-8 pointer-events-none group-hover:text-pulse-citrus/10 transition-colors">
+                <span className="font-display text-6xl sm:text-7xl font-black text-white/5 absolute top-6 right-8 pointer-events-none group-hover:text-pulse-citrus/10 transition-colors select-none">
                   01
                 </span>
-                <Droplets className="w-10 h-10 text-pulse-citrus mb-8" />
-                <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-bold uppercase text-white mb-4">COLD-PRESSING</h3>
-                <p className="text-slate-300 text-base leading-relaxed font-light">
+                <Droplets className="w-10 h-10 text-pulse-citrus mb-6" />
+                <h3 className="font-display text-xl sm:text-2xl font-bold uppercase text-white mb-3 tracking-tight">
+                  COLD-PRESSING
+                </h3>
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-light">
                   Citrus rinds and fruit pulp are cold-pressed below 4°C to prevent thermal oxidation and lock in raw vitamin C.
                 </p>
               </div>
             </div>
 
-            <div className="w-full sm:w-[calc(50%-20px)] lg:w-0 lg:flex-1 p-8 sm:p-10 md:p-12 rounded-[2.5rem] glass-panel border border-white/15 relative overflow-hidden group hover:border-pulse-zero/40 transition-colors flex flex-col justify-between">
+            {/* Card 02 */}
+            <div className="p-8 sm:p-10 rounded-[2.5rem] glass-panel border border-white/15 relative overflow-hidden group hover:border-pulse-zero/40 transition-colors flex flex-col justify-between">
               <div>
-                <span className="font-display text-6xl sm:text-8xl font-black text-white/5 absolute top-6 right-8 pointer-events-none group-hover:text-pulse-zero/10 transition-colors">
+                <span className="font-display text-6xl sm:text-7xl font-black text-white/5 absolute top-6 right-8 pointer-events-none group-hover:text-pulse-zero/10 transition-colors select-none">
                   02
                 </span>
-                <Leaf className="w-10 h-10 text-pulse-zero mb-8" />
-                <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-bold uppercase text-white mb-4">STEAM DISTILLATION</h3>
-                <p className="text-slate-300 text-base leading-relaxed font-light">
+                <Leaf className="w-10 h-10 text-pulse-zero mb-6" />
+                <h3 className="font-display text-xl sm:text-2xl font-bold uppercase text-white mb-3 tracking-tight">
+                  STEAM DISTILLATION
+                </h3>
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-light">
                   Botanical herbs undergo slow vapor extraction to capture delicate top-note aromas without heat bitterness.
                 </p>
               </div>
             </div>
 
-            <div className="w-full sm:w-[calc(50%-20px)] lg:w-0 lg:flex-1 p-8 sm:p-10 md:p-12 rounded-[2.5rem] glass-panel border border-white/15 relative overflow-hidden group hover:border-pulse-citrus/40 transition-colors flex flex-col justify-between">
+            {/* Card 03 - Centered on Row 2 for Tablet (768px), 3rd Column for Desktop (1024px+) */}
+            <div className="md:col-span-2 lg:col-span-1 w-full md:max-w-[calc(50%-12px)] lg:max-w-none mx-auto p-8 sm:p-10 rounded-[2.5rem] glass-panel border border-white/15 relative overflow-hidden group hover:border-pulse-citrus/40 transition-colors flex flex-col justify-between">
               <div>
-                <span className="font-display text-6xl sm:text-8xl font-black text-white/5 absolute top-6 right-8 pointer-events-none group-hover:text-pulse-citrus/10 transition-colors">
+                <span className="font-display text-6xl sm:text-7xl font-black text-white/5 absolute top-6 right-8 pointer-events-none group-hover:text-pulse-citrus/10 transition-colors select-none">
                   03
                 </span>
-                <Sparkles className="w-10 h-10 text-pulse-citrus mb-8" />
-                <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-bold uppercase text-white mb-4">MICRO EFFERVESCENCE</h3>
-                <p className="text-slate-300 text-base leading-relaxed font-light">
+                <Sparkles className="w-10 h-10 text-pulse-citrus mb-6" />
+                <h3 className="font-display text-xl sm:text-2xl font-bold uppercase text-white mb-3 tracking-tight">
+                  MICRO EFFERVESCENCE
+                </h3>
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-light">
                   Pure spring water is carbonated with ultra-fine nitrogen-CO2 micro bubbles for a velvety mouthfeel.
                 </p>
               </div>

@@ -219,7 +219,7 @@ export const INGREDIENT_GROUPS = [
         name: 'JAPANESE YUZU',
         origin: 'Kochi Prefecture, Japan',
         desc: 'Fragrant rare yuzu cold-pressed for floral citrus zest, deep aroma, and electric sharpness.',
-        image: 'https://images.unsplash.com/photo-1608181114410-db2bb2153245?q=80&w=1200&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?q=80&w=1200&auto=format&fit=crop',
         leadsTo: 'CITRUS PULSE'
       }
     ]

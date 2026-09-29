@@ -283,6 +283,10 @@ export const DiscoverPage = ({ onNavigate }) => {
               <img
                 src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop"
                 alt="PULSE Nightclub & Sound Stage"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&auto=format&fit=crop';
+                }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -296,6 +300,10 @@ export const DiscoverPage = ({ onNavigate }) => {
               <img
                 src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&auto=format&fit=crop"
                 alt="PULSE Rooftop Session"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop';
+                }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -309,6 +317,10 @@ export const DiscoverPage = ({ onNavigate }) => {
               <img
                 src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop"
                 alt="PULSE Coastal Sunset"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop';
+                }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -320,8 +332,12 @@ export const DiscoverPage = ({ onNavigate }) => {
 
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden glass-panel border border-white/15 group">
               <img
-                src="https://images.unsplash.com/photo-1517649763962-0c623266010b?q=80&w=800&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=800&auto=format&fit=crop"
                 alt="PULSE Wellness Retreat"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?q=80&w=800&auto=format&fit=crop';
+                }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -337,29 +353,33 @@ export const DiscoverPage = ({ onNavigate }) => {
         {/* DISCOVER SECTION 4: THE PULSE CLUB MEMBERSHIP             */}
         {/* ========================================================= */}
         <section className="mt-24 sm:mt-32 pt-16 sm:pt-20 border-t border-white/10">
-          <div className="rounded-3xl glass-panel border border-white/15 p-5 sm:p-8 md:p-14 bg-gradient-to-br from-white/5 via-transparent to-pulse-citrus/10 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="max-w-2xl">
+          <div className="rounded-[2.5rem] glass-panel border border-white/15 p-8 sm:p-12 lg:p-16 bg-gradient-to-br from-white/5 via-[#12141C] to-pulse-citrus/10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-pulse-citrus/10 rounded-full blur-[120px] pointer-events-none" />
+
+            <div className="max-w-2xl relative z-10">
               <span className="font-mono text-xs font-bold text-pulse-citrus tracking-widest uppercase block mb-3">
                 04 // EXCLUSIVE ACCESS
               </span>
-              <h2 className="font-display text-xl sm:text-3xl md:text-5xl font-extrabold uppercase text-white mb-4 break-words">
+              <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-extrabold uppercase text-white mb-4 leading-tight break-words">
                 JOIN THE PULSE TASTING CLUB.
               </h2>
-              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed font-light">
                 Receive unreleased seasonal flavor drops, invitation-only event passes, and monthly home delivery packs straight from our liquid laboratory.
               </p>
             </div>
 
-            <button
-              onClick={() => {
-                soundManager.playFizzPop();
-                onNavigate('drinks');
-              }}
-              className="px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-pulse-citrus text-black font-mono font-bold text-xs uppercase tracking-widest hover:bg-white transition-all shadow-xl shadow-pulse-citrus/20 whitespace-nowrap"
-              data-cursor="hover"
-            >
-              JOIN MEMBERSHIP CLUB →
-            </button>
+            <div className="relative z-10 self-start lg:self-center">
+              <button
+                onClick={() => {
+                  soundManager.playFizzPop();
+                  onNavigate('drinks');
+                }}
+                className="px-8 py-4 rounded-full bg-pulse-citrus text-black font-mono font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-white hover:scale-105 transition-all shadow-[0_0_30px_rgba(234,249,0,0.3)] whitespace-nowrap"
+                data-cursor="hover"
+              >
+                JOIN MEMBERSHIP CLUB →
+              </button>
+            </div>
           </div>
         </section>
       </div>
